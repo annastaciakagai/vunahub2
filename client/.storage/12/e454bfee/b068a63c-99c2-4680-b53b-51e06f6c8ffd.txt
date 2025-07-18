@@ -1,3 +1,0 @@
-$ cd /workspace/shadcn-ui
-$ mkdir -p src/components/layout src/components/common src/components/home src/components/auth src/components/dashboard src/pages src/services src/utils src/hooks src/assets public/assets
-

@@ -34,17 +34,11 @@ VunaHub is a comprehensive agricultural platform that connects farmers, traders,
 git clone <repository-url>
 cd VunaHub
 ```
-2. Install backend dependencies:
+2. Install all dependencies:
 ```bash
-cd server
-npm install
+npm run install:all
 ```
-3. Install frontend dependencies:
-```bash
-cd client/workspace/shadcn-ui
-npm install
-```
-4. Set up environment variables:
+3. Set up environment variables:
 **Backend (.env in server directory):**
 ```
 MONGO_URI=mongodb://localhost:27017/vunahub
@@ -55,26 +49,23 @@ TWILIO_PHONE_NUMBER=your_twilio_phone_number
 ORS_API_KEY=your_openrouteservice_api_key
 PORT=5000
 ```
-**Frontend (.env in client/workspace/shadcn-ui directory):**
+**Frontend (.env in frontend directory):**
 ```
 VITE_API_URL=http://localhost:5000/api
 ```
 ### Running the Application
-#### Option 1: Run both frontend and backend together
+#### Option 1: Run both frontend and backend together (Recommended)
 ```bash
-cd client/workspace/shadcn-ui
 npm run dev:full
 ```
 #### Option 2: Run separately
 
 **Backend:**
 ```bash
-cd server
-npm run dev
+npm run server
 ```
 **Frontend:**
 ```bash
-cd client/workspace/shadcn-ui
 npm run dev
 ```
 The application will be available at:
