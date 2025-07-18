@@ -1,12 +1,11 @@
-// middleware/auth.js
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
 /**
  * verifyToken(allowedRoles)
  * @param {string[]} allowedRoles  — if non‑empty, only allow users whose role appears in this array
  */
-export const verifyToken = (allowedRoles = []) => {
+const verifyToken = (allowedRoles = []) => {
   return async (req, res, next) => {
     try {
       // 1. Grab the token from the header
@@ -38,3 +37,5 @@ export const verifyToken = (allowedRoles = []) => {
     }
   };
 };
+
+module.exports = { verifyToken };

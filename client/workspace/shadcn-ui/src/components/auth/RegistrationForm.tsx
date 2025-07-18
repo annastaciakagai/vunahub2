@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { authService } from '@/services/authService';
 
 interface RegistrationFormProps {
   userType: 'farmer' | 'trader';
@@ -59,15 +60,32 @@ const RegistrationForm = ({ userType }: RegistrationFormProps) => {
         throw new Error('Password must be at least 6 characters long');
       }
 
-      // In a real app, this would be an API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const signupData = {
+        name: formData.name,
+        phone: formData.phone,
+        password: formData.password,
+        role: userType,
+        ...(userType === 'farmer' && {
+          locationName: formData.location,
+          produceTypes: formData.cropType ? [formData.cropType] : []
+        }),
+        ...(userType === 'trader' && {
+          locationName: formData.businessName
+        })
+      };
+
+      await authService.signup(signupData);
       
-      // Mock success
       navigate('/registration-success', { 
         state: { userType } 
       });
-    } catch (err: any) {
-      setError(err.message || 'An error occurred during registration');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred during registration';
+      if (axios.isAxiosError(err) && err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }

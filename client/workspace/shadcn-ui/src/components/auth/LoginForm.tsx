@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { setToken, setUserInfo } from '@/utils/auth';
+import { setToken, setUserInfo, UserRole } from '@/utils/auth';
+import { authService } from '@/services/authService';
 
 interface LoginFormProps {
   userType: 'farmer' | 'trader' | 'driver' | 'admin';
@@ -37,34 +38,32 @@ const LoginForm = ({ userType }: LoginFormProps) => {
     setError(null);
 
     try {
-      // In a real app, this would be an API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const loginData = {
+        password: formData.password,
+        role: userType as UserRole,
+        ...(userType === 'driver' ? { systemId: formData.identifier } : { phone: formData.identifier })
+      };
 
-      // Mock authentication
-      if (formData.password.length < 6) {
-        throw new Error('Invalid credentials');
+      let response;
+      if (userType === 'driver') {
+        response = await authService.driverLogin(formData.identifier, formData.password);
+      } else {
+        response = await authService.login(loginData);
       }
       
-      // Mock success response
-      const mockResponse = {
-        token: 'mock-jwt-token',
-        user: {
-          id: '123456',
-          name: `Sample ${userType.charAt(0).toUpperCase() + userType.slice(1)}`,
-          email: userType !== 'driver' ? 'sample@example.com' : undefined,
-          phone: '+254700123456',
-          role: userType,
-        }
-      };
-      
       // Store auth data
-      setToken(mockResponse.token);
-      setUserInfo(mockResponse.user);
+      setToken(response.token);
+      setUserInfo(response.user);
       
       // Redirect to appropriate dashboard
       navigate(`/${userType}-dashboard`);
-    } catch (err: any) {
-      setError(err.message || 'An error occurred during login');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred during login';
+      if (axios.isAxiosError(err) && err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }

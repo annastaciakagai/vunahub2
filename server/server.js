@@ -13,9 +13,13 @@ app.use(express.json());
 
 const userRoutes = require('./routes/userRoutes');
 const produceRoutes = require('./routes/produceRoutes');
+const collectionPointRoutes = require('./routes/collectionPointRoutes');
+const collectionEventRoutes = require('./routes/collectionEventRoutes');
 
 app.use('/api/users', userRoutes);
 app.use('/api/produce', produceRoutes);
+app.use('/api/collection-points', collectionPointRoutes);
+app.use('/api/collection-events', collectionEventRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);

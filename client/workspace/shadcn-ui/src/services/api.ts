@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getToken } from '@/utils/auth';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://api.vunahub.com/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -29,6 +29,9 @@ api.interceptors.response.use(
     // Handle errors like 401 Unauthorized
     if (error.response && error.response.status === 401) {
       // Redirect to login or handle token refresh
+      localStorage.removeItem('vunahub_auth_token');
+      localStorage.removeItem('vunahub_user_info');
+      localStorage.removeItem('vunahub_user_role');
       window.location.href = '/login';
     }
     return Promise.reject(error);

@@ -8,11 +8,16 @@ export type UserRole = 'farmer' | 'trader' | 'driver' | 'admin';
 
 // User info interface
 export interface UserInfo {
-  id: string;
+  id?: string;
+  _id?: string;
   name: string;
   email?: string;
   phone?: string;
   role: UserRole;
+  locationName?: string;
+  produceTypes?: string[];
+  farmerId?: string;
+  systemId?: string;
   [key: string]: unknown;
 }
 
@@ -33,6 +38,11 @@ export const removeToken = (): void => {
 
 // Set user info
 export const setUserInfo = (userInfo: UserInfo): void => {
+  // Normalize the user ID field
+  const normalizedUserInfo = {
+    ...userInfo,
+    id: userInfo.id || userInfo._id
+  };
   localStorage.setItem(USER_INFO_KEY, JSON.stringify(userInfo));
   localStorage.setItem(USER_ROLE_KEY, userInfo.role);
 };

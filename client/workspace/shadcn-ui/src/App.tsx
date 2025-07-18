@@ -13,6 +13,8 @@ import NotFound from './pages/NotFound';
 // Dashboard Pages
 import DriverDashboardPage from './pages/dashboards/DriverDashboardPage';
 import AdminDashboardPage from './pages/dashboards/AdminDashboardPage';
+import FarmerDashboardPage from './pages/dashboards/FarmerDashboardPage';
+import TraderDashboardPage from './pages/dashboards/TraderDashboardPage';
 
 // Auth protection
 import { isAuthenticated, getUserRole } from './utils/auth';
@@ -49,6 +51,24 @@ const App = () => (
           <Route path="/registration-success" element={<RegistrationSuccessPage />} />
           
           {/* Protected Dashboard Routes */}
+          <Route 
+            path="/farmer-dashboard/*" 
+            element={
+              <ProtectedRoute allowedRoles={['farmer']}>
+                <FarmerDashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route 
+            path="/trader-dashboard/*" 
+            element={
+              <ProtectedRoute allowedRoles={['trader']}>
+                <TraderDashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          
           <Route 
             path="/driver-dashboard/*" 
             element={
